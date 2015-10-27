@@ -18,24 +18,24 @@
 #
 ###############################################################################
 
-from openerp import models
+from openerp.osv import orm
 from openerp import SUPERUSER_ID
-from openerp.http import request
+#from openerp.addons.web.http import request
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
+class ResUsers(orm.Model):
     _inherit = "res.users"
 
     def _get_ipaddress(self, cr, uid, context=None):
-        if 'HTTP_X_FORWARDED_FOR' in request.httprequest.environ:
-            ip_adds = request.httprequest.environ[
+        if 'HTTP_X_FORWARDED_FOR' in self.httprequest.environ:
+            ip_adds = self.httprequest.environ[
                 'HTTP_X_FORWARDED_FOR'].split(",")
             ip = ip_adds[0]
         else:
-            ip = request.httprequest.environ['REMOTE_ADDR']
+            ip = self.httprequest.environ['REMOTE_ADDR']
         return ip
 
     def _get_log_info(self, cr, uid, db, login, x_ctx=''):
